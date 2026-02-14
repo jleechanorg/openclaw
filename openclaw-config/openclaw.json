@@ -138,7 +138,7 @@
       "dmPolicy": "allowlist",
       "selfChatMode": true,
       "allowFrom": [
-        "+6502965127"
+        "+<YOUR_WHATSAPP_NUMBER>"
       ],
       "groupPolicy": "allowlist",
       "mediaMaxMb": 50,

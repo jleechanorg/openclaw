@@ -17,7 +17,7 @@
 ### 2. **Startup Verification: LaunchAgent**
 - **File:** `~/Library/LaunchAgents/ai.openclaw.startup-check.plist`
 - **Purpose:** Sends WhatsApp confirmation after each login/restart
-- **Sends message to:** +6502965127
+- **Sends message to:** `${OPENCLAW_WHATSAPP_TARGET}`
 - **Logs:** `~/.openclaw/logs/startup-check.log`
 
 ### 3. **Health Monitoring: Crontab**
@@ -61,7 +61,7 @@ WhatsApp default: linked, enabled
 
 ### Test 4: Check WhatsApp (You'll Receive a Message!)
 After each restart/login, you should automatically receive:
-> 🚀 MacBook restarted! OpenClaw auto-started successfully (PID: XXXXX) ✅
+> 🚀 OpenClaw auto-started successfully (PID: XXXXX) ✅
 
 ---
 
@@ -205,7 +205,7 @@ echo "" && openclaw channels list
 ✅ **LaunchAgent installed** with RunAtLoad=true, KeepAlive=true
 ✅ **Startup verification** configured (sends WhatsApp confirmation)
 ✅ **Health monitoring** via cron (every 5 minutes)
-✅ **WhatsApp connected** to +6502965127
+✅ **WhatsApp connected** to `${OPENCLAW_WHATSAPP_TARGET}`
 ✅ **Auto-recovery** enabled (restarts on crash)
 ✅ **Version:** v2026.2.12 (latest)
 

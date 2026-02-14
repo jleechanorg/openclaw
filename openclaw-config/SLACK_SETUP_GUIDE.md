@@ -1,7 +1,7 @@
 # Slack Setup Guide for OpenClaw
 
-**App ID:** A0AESRKA7L3
-**Client ID:** 9541820692839.10502869347683
+**App ID:** YOUR_SLACK_APP_ID
+**Client ID:** YOUR_SLACK_CLIENT_ID
 **Status:** App created, awaiting OAuth installation
 
 ---
@@ -10,7 +10,7 @@
 
 ### Step 1: Add Scopes in Slack UI
 
-Go to: https://api.slack.com/apps/A0AESRKA7L3/oauth
+Go to: https://api.slack.com/apps/${YOUR_SLACK_APP_ID}/oauth
 
 Click **"Bot Token Scopes"** and add:
 
@@ -49,7 +49,7 @@ Run the setup script with your bot token:
 ```
 
 **With Socket Mode (recommended):**
-1. Go to Socket Mode in Slack: https://api.slack.com/apps/A0AESRKA7L3/socket-mode
+1. Go to Socket Mode in Slack: https://api.slack.com/apps/${YOUR_SLACK_APP_ID}/socket-mode
 2. Enable Socket Mode
 3. Generate token with `connections:write` scope
 4. Run:

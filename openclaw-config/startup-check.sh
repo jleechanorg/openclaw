@@ -3,7 +3,27 @@
 # Purpose: Runs after login to verify OpenClaw is running and send confirmation
 
 LOG_FILE="$HOME/.openclaw/logs/startup-check.log"
+LOG_DIR="$(dirname "$LOG_FILE")"
+OPENCLAW_BIN="$(command -v openclaw || true)"
+TARGET="${OPENCLAW_WHATSAPP_TARGET:-}"
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+# Ensure openclaw CLI exists
+if [ -z "$OPENCLAW_BIN" ]; then
+    echo "[$TIMESTAMP] ❌ openclaw CLI not found in PATH" >&2
+    exit 1
+fi
+
+# Ensure log directory exists
+if ! mkdir -p "$LOG_DIR"; then
+    echo "[$TIMESTAMP] ❌ Failed to create log directory: $LOG_DIR" >&2
+    exit 1
+fi
+
+if [ -z "$TARGET" ]; then
+    echo "[$TIMESTAMP] ❌ OPENCLAW_WHATSAPP_TARGET is not set. Set it before enabling startup confirmation." >> "$LOG_FILE"
+    exit 1
+fi
 
 # Wait for network to be available (max 30 seconds)
 for i in {1..30}; do
@@ -24,11 +44,15 @@ for i in {1..30}; do
             sleep 10
 
             # Send startup confirmation via WhatsApp
-            if openclaw channels list | grep -q "WhatsApp default: linked, enabled"; then
-                openclaw message send --target "+6502965127" \
-                    --message "🚀 MacBook restarted! OpenClaw auto-started successfully (PID: $PID) ✅" \
-                    --channel whatsapp >> "$LOG_FILE" 2>&1
-                echo "[$TIMESTAMP] ✅ Startup confirmation sent via WhatsApp" >> "$LOG_FILE"
+            if "$OPENCLAW_BIN" channels list | grep -q "WhatsApp default: linked, enabled"; then
+                if "$OPENCLAW_BIN" message send --target "$TARGET" \
+                    --message "🚀 OpenClaw auto-started successfully (PID: $PID) ✅" \
+                    --channel whatsapp >> "$LOG_FILE" 2>&1; then
+                    echo "[$TIMESTAMP] ✅ Startup confirmation sent via WhatsApp" >> "$LOG_FILE"
+                else
+                    echo "[$TIMESTAMP] ❌ Failed to send startup confirmation via WhatsApp" >> "$LOG_FILE"
+                    exit 1
+                fi
             else
                 echo "[$TIMESTAMP] ⚠️  WhatsApp not ready yet" >> "$LOG_FILE"
             fi
