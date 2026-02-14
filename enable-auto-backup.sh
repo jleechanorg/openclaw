@@ -29,7 +29,6 @@ mkdir -p "$BACKUP_DIR"
 
 tar --exclude "$BACKUP_DIR" \
   --exclude '*.bak' \
-  --ignore-failed-read \
   -czf "$BACKUP_DIR/backup-${a}.tar.gz" \
   "$HOME/.openclaw" \
   "$HOME/Library/LaunchAgents/ai.openclaw.gateway.plist"
