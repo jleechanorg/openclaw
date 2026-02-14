@@ -2,6 +2,9 @@
 # Slack Setup Script for OpenClaw
 # Run this after getting your Bot Token from Slack
 
+SLACK_APP_ID="${SLACK_APP_ID:-YOUR_SLACK_APP_ID}"
+SLACK_CLIENT_ID="${SLACK_CLIENT_ID:-YOUR_SLACK_CLIENT_ID}"
+
 echo "🦞 OpenClaw Slack Integration Setup"
 echo "===================================="
 echo ""
@@ -16,8 +19,8 @@ if [ -z "$1" ]; then
     echo "  $0 xoxb-your-bot-token-here"
     echo "  $0 xoxb-your-bot-token-here xapp-your-app-token-here"
     echo ""
-    echo "To get your tokens:"
-    echo "1. Go to https://api.slack.com/apps/A0AESRKA7L3"
+    echo "To get the tokens:"
+    echo "1. Go to https://api.slack.com/apps/$SLACK_APP_ID/oauth"
     echo "2. Click 'OAuth & Permissions'"
     echo "3. Copy the 'Bot User OAuth Token' (xoxb-...)"
     echo "4. (Optional) Enable Socket Mode and copy App Token (xapp-...)"
@@ -28,8 +31,8 @@ BOT_TOKEN="$1"
 APP_TOKEN="$2"
 
 echo "📝 Configuration:"
-echo "  App ID: A0AESRKA7L3"
-echo "  Client ID: 9541820692839.10502869347683"
+echo "  App ID: $SLACK_APP_ID"
+echo "  Client ID: $SLACK_CLIENT_ID"
 echo "  Bot Token: ${BOT_TOKEN:0:12}..."
 if [ -n "$APP_TOKEN" ]; then
     echo "  App Token: ${APP_TOKEN:0:12}... (Socket Mode enabled)"
@@ -53,7 +56,8 @@ else
         --bot-token "$BOT_TOKEN"
 fi
 
-if [ $? -eq 0 ]; then
+OPENCLAW_EXIT=$?
+if [ $OPENCLAW_EXIT -eq 0 ]; then
     echo ""
     echo "✅ Slack channel added successfully!"
     echo ""
@@ -65,7 +69,7 @@ if [ $? -eq 0 ]; then
     echo "  openclaw message send --channel slack --target '@your-slack-username' --message 'Hello from OpenClaw!'"
 else
     echo ""
-    echo "❌ Failed to add Slack channel"
+    echo "❌ Failed to add Slack channel (exit code: $OPENCLAW_EXIT)"
     echo "Check the error above and try again"
     exit 1
 fi

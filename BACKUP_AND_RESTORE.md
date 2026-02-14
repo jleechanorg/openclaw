@@ -123,7 +123,7 @@ git init
 echo "credentials/" >> .gitignore
 echo "logs/" >> .gitignore
 echo "openclaw.json" >> .gitignore
-git add *.md *.sh
+git add credentials/ *.md *.sh
 git commit -m "OpenClaw configuration backup"
 
 # Push to private repo
@@ -149,7 +149,7 @@ git push -u origin main
 If you lose your Slack tokens:
 
 **Bot Token:**
-1. Go to: https://api.slack.com/apps/A0AESRKA7L3/install-on-team
+1. Go to: https://api.slack.com/apps/{SLACK_APP_ID}/install-on-team
 2. Reinstall app (or view existing installation)
 3. Copy Bot Token again
 

@@ -3,7 +3,13 @@
 # Purpose: Monitors OpenClaw gateway and restarts if needed
 
 LOG_FILE="$HOME/.openclaw/logs/health-check.log"
+LOG_DIR="$(dirname "$LOG_FILE")"
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
+
+if ! mkdir -p "$LOG_DIR"; then
+    echo "[$TIMESTAMP] ❌ Failed to create log directory: $LOG_DIR"
+    exit 1
+fi
 
 # Function to log messages
 log_message() {
@@ -17,7 +23,7 @@ if ! launchctl list | grep -q "ai.openclaw.gateway"; then
         log_message "✅ Gateway installed"
         exit 0
     else
-        log_message "❌ Gateway installation failed"
+        log_message "❌ Gateway install failed"
         exit 1
     fi
 fi
@@ -38,9 +44,7 @@ fi
 # Check if gateway is responding
 if ! openclaw gateway status | grep -q "Runtime: running"; then
     log_message "⚠️  Gateway not responding. Restarting..."
-    openclaw gateway stop >> "$LOG_FILE" 2>&1
-    sleep 2
-    if openclaw gateway install >> "$LOG_FILE" 2>&1; then
+    if openclaw gateway stop >> "$LOG_FILE" 2>&1 && sleep 2 && openclaw gateway install >> "$LOG_FILE" 2>&1; then
         log_message "✅ Gateway restarted"
         exit 0
     else

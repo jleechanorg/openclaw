@@ -19,7 +19,7 @@
 - mkfs
 
 ## Workspace Restrictions
-- Working directory: /Users/jleechan/.openclaw/workspace
+- Working directory: $HOME/.openclaw/workspace
 - No access to: ~/.ssh, ~/.aws, ~/.config, ~/Documents
 
 ## Review this file before enabling new commands
