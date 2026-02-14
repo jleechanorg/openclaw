@@ -29,7 +29,7 @@ Restart gateway: `openclaw gateway restart`
 Use the gateway token from `gateway.auth.token` in openclaw.json:
 
 ```bash
-OPENCLAW_GATEWAY_TOKEN="08594b0c0a25e880680c874df473521ac37320a865620725"
+OPENCLAW_GATEWAY_TOKEN="<YOUR_OPENCLAW_GATEWAY_TOKEN>"
 ```
 
 ### Usage
@@ -39,7 +39,7 @@ OPENCLAW_GATEWAY_TOKEN="08594b0c0a25e880680c874df473521ac37320a865620725"
 ```bash
 curl -X POST http://127.0.0.1:18789/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer 08594b0c0a25e880680c874df473521ac37320a865620725" \
+  -H "Authorization: Bearer $OPENCLAW_GATEWAY_TOKEN" \
   -H "x-openclaw-agent-id: main" \
   -d '{
     "model": "openclaw",
@@ -72,7 +72,7 @@ import urllib.request
 import json
 
 GATEWAY_URL = 'http://127.0.0.1:18789'
-GATEWAY_TOKEN = '08594b0c0a25e880680c874df473521ac37320a865620725'
+GATEWAY_TOKEN = '<YOUR_OPENCLAW_GATEWAY_TOKEN>'
 
 def call_openclaw(message):
     url = f'{GATEWAY_URL}/v1/chat/completions'
@@ -109,7 +109,7 @@ The `openclaw-mcp` package uses this API:
 ```bash
 npx openclaw-mcp \
   --openclaw-url http://127.0.0.1:18789 \
-  --gateway-token 08594b0c0a25e880680c874df473521ac37320a865620725
+  --gateway-token <YOUR_OPENCLAW_GATEWAY_TOKEN>
 ```
 
 Configure in `~/.config/claude/mcp_settings.json`:
@@ -122,7 +122,7 @@ Configure in `~/.config/claude/mcp_settings.json`:
       "args": [
         "openclaw-mcp",
         "--openclaw-url", "http://127.0.0.1:18789",
-        "--gateway-token", "08594b0c0a25e880680c874df473521ac37320a865620725"
+        "--gateway-token", "<YOUR_OPENCLAW_GATEWAY_TOKEN>"
       ]
     }
   }
