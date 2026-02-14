@@ -1,39 +1,74 @@
-# OpenClaw Repo Bootstrap (jleechanorg/openclaw)
+# OpenClaw HTTP API + Full-Permission Configuration
 
-This directory contains the bootstrap assets to build a GitHub repo for OpenClaw configuration snapshots.
+This repository documents the OpenClaw HTTP API setup and the permission settings used for full execution mode.
 
-## What is included
+## OpenClaw HTTP API configuration
 
-- `bootstrap-openclaw-config.sh` - exports a sanitized local snapshot of non-sensitive OpenClaw config.
-- `create-openclaw-repo.sh` - scaffolds/pushes a GitHub repo via `gh`.
-- `audit_report.md` - notes from the local audit pass.
+Recent local configuration in `~/.openclaw/openclaw.json` has the HTTP API enabled:
 
-## Recommended flow (blank first, then PR)
+- `gateway.port: 18789`
+- `gateway.http.endpoints.chatCompletions.enabled: true`
+- `gateway.auth.mode: token`
+- `gateway.auth.token` configured
 
-```bash
-cd /Users/jleechan/.openclaw/workspace/openclaw-rehome
-
-# 1) create blank repo base + feature branch commit for PR
-./blank-to-pr.sh openclaw jleechanorg
-
-# 2) open PR from the feature branch `config-snapshot`
-# (script prints a ready-to-run command)
-```
-
-## Quick legacy path (not recommended)
-
-The legacy one-shot flow is still present for reference:
+### Curl command
 
 ```bash
-cd /Users/jleechan/.openclaw/workspace/openclaw-rehome
-./bootstrap-openclaw-config.sh ./openclaw-export
-cd ./openclaw-export
-./create-openclaw-repo.sh openclaw
+export OPENCLAW_TOKEN="<YOUR_OPENCLAW_TOKEN>"
+
+curl -sS \
+  -X POST "http://127.0.0.1:18789/v1/chat/completions" \
+  -H "Authorization: Bearer $OPENCLAW_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"agent":"main","messages":[{"role":"user","content":"Hello from OpenClaw HTTP API"}]}'
 ```
 
-> Tokens are intentionally kept out of this repo. Scrub scripts are included in `bootstrap-openclaw-config.sh` to redact `token`, `secret`, `password`, and Slack token patterns (xox*).
+> Replace `<YOUR_OPENCLAW_TOKEN>` with the token from your local `gateway.auth.token`.
 
-## Current status
+## Config that enables full permissions
 
-Repo scaffold is prepared for a blank-first PR workflow targeting `jleechanorg/openclaw`. Sensitive tokens should be scrubbed before publish.
+`~/.openclaw/openclaw.json` (relevant sections):
 
+```json
+{
+  "tools": {
+    "exec": {
+      "host": "gateway",
+      "ask": "off",
+      "safeBins": [
+        "git", "gh", "python", "python3", "vpython", "npm", "npx", "node", "pip",
+        "ls", "cat", "grep", "find", "head", "tail", "sed", "awk", "sort", "uniq", "wc",
+        "file", "stat", "dirname", "basename", "playwright", "which", "curl", "wget"
+      ]
+    }
+  },
+  "gateway": {
+    "http": {
+      "endpoints": {
+        "chatCompletions": { "enabled": true }
+      }
+    }
+  }
+}
+```
+
+`~/.openclaw/exec-approvals.json`:
+
+```json
+{
+  "defaults": {
+    "security": "full",
+    "ask": "off",
+    "askFallback": "full",
+    "autoAllowSkills": true
+  },
+  "agents": {
+    "main": {
+      "security": "full",
+      "ask": "off"
+    }
+  }
+}
+```
+
+These settings combine to allow the `main` agent to execute commands without confirmation (full permissions) and keep approvals off.
