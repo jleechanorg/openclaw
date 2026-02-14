@@ -17,7 +17,7 @@
 ### 2. **Startup Verification: LaunchAgent**
 - **File:** `~/Library/LaunchAgents/ai.openclaw.startup-check.plist`
 - **Purpose:** Sends WhatsApp confirmation after each login/restart
-- **Sends message to:** +6502965127
+- **Sends message to:** Set via `OPENCLAW_NOTIFICATION_TARGET` environment variable
 - **Logs:** `~/.openclaw/logs/startup-check.log`
 
 ### 3. **Health Monitoring: Crontab**
@@ -205,7 +205,7 @@ echo "" && openclaw channels list
 ✅ **LaunchAgent installed** with RunAtLoad=true, KeepAlive=true
 ✅ **Startup verification** configured (sends WhatsApp confirmation)
 ✅ **Health monitoring** via cron (every 5 minutes)
-✅ **WhatsApp connected** to +6502965127
+✅ **WhatsApp notification** requires `OPENCLAW_NOTIFICATION_TARGET` environment variable
 ✅ **Auto-recovery** enabled (restarts on crash)
 ✅ **Version:** v2026.2.12 (latest)
 

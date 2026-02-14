@@ -25,10 +25,14 @@ for i in {1..30}; do
 
             # Send startup confirmation via WhatsApp
             if openclaw channels list | grep -q "WhatsApp default: linked, enabled"; then
-                openclaw message send --target "+6502965127" \
-                    --message "🚀 MacBook restarted! OpenClaw auto-started successfully (PID: $PID) ✅" \
-                    --channel whatsapp >> "$LOG_FILE" 2>&1
-                echo "[$TIMESTAMP] ✅ Startup confirmation sent via WhatsApp" >> "$LOG_FILE"
+                if [ -n "$OPENCLAW_NOTIFICATION_TARGET" ]; then
+                    openclaw message send --target "$OPENCLAW_NOTIFICATION_TARGET" \
+                        --message "🚀 MacBook restarted! OpenClaw auto-started successfully (PID: $PID) ✅" \
+                        --channel whatsapp >> "$LOG_FILE" 2>&1
+                    echo "[$TIMESTAMP] ✅ Startup confirmation sent via WhatsApp" >> "$LOG_FILE"
+                else
+                    echo "[$TIMESTAMP] ⚠️  OPENCLAW_NOTIFICATION_TARGET not set - skipping notification" >> "$LOG_FILE"
+                fi
             else
                 echo "[$TIMESTAMP] ⚠️  WhatsApp not ready yet" >> "$LOG_FILE"
             fi

@@ -13,18 +13,26 @@ log_message() {
 # Check if gateway is running
 if ! launchctl list | grep -q "ai.openclaw.gateway"; then
     log_message "❌ Gateway not loaded in launchctl. Installing..."
-    openclaw gateway install >> "$LOG_FILE" 2>&1
-    log_message "✅ Gateway installed"
-    exit 0
+    if openclaw gateway install >> "$LOG_FILE" 2>&1; then
+        log_message "✅ Gateway installed"
+        exit 0
+    else
+        log_message "❌ Gateway installation failed"
+        exit 1
+    fi
 fi
 
 # Check if process is actually running
 PID=$(launchctl list | grep "ai.openclaw.gateway" | awk '{print $1}')
 if [ "$PID" = "-" ] || [ -z "$PID" ]; then
     log_message "⚠️  Gateway loaded but not running. Restarting..."
-    launchctl kickstart gui/$(id -u)/ai.openclaw.gateway >> "$LOG_FILE" 2>&1
-    log_message "✅ Gateway kickstarted"
-    exit 0
+    if launchctl kickstart gui/$(id -u)/ai.openclaw.gateway >> "$LOG_FILE" 2>&1; then
+        log_message "✅ Gateway kickstarted"
+        exit 0
+    else
+        log_message "❌ Gateway kickstart failed"
+        exit 1
+    fi
 fi
 
 # Check if gateway is responding
@@ -32,9 +40,13 @@ if ! openclaw gateway status | grep -q "Runtime: running"; then
     log_message "⚠️  Gateway not responding. Restarting..."
     openclaw gateway stop >> "$LOG_FILE" 2>&1
     sleep 2
-    openclaw gateway install >> "$LOG_FILE" 2>&1
-    log_message "✅ Gateway restarted"
-    exit 0
+    if openclaw gateway install >> "$LOG_FILE" 2>&1; then
+        log_message "✅ Gateway restarted"
+        exit 0
+    else
+        log_message "❌ Gateway restart failed"
+        exit 1
+    fi
 fi
 
 # Check WhatsApp connection
