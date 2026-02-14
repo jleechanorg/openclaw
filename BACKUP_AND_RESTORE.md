@@ -123,7 +123,7 @@ git init
 echo "credentials/" >> .gitignore
 echo "logs/" >> .gitignore
 echo "openclaw.json" >> .gitignore
-git add credentials/ *.md *.sh
+git add *.md *.sh
 git commit -m "OpenClaw configuration backup"
 
 # Push to private repo
