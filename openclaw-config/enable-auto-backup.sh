@@ -29,6 +29,7 @@ mkdir -p "$BACKUP_DIR"
 
 tar --exclude "$BACKUP_DIR" \
   --exclude '*.bak' \
+  --ignore-failed-read \
   -czf "$BACKUP_DIR/backup-${a}.tar.gz" \
   "$HOME/.openclaw" \
   "$HOME/Library/LaunchAgents/ai.openclaw.gateway.plist"
@@ -43,7 +44,7 @@ CRON_MARK="# OpenClaw daily backup"
 CRON_LINE="$CRON_EXPR $HOME/.openclaw/backup-content.sh"
 
 tmp=$(mktemp)
-crontab -l 2>/dev/null | grep -v "$CRON_MARK" > "$tmp" || true
+crontab -l 2>/dev/null | grep -v "$CRON_MARK" | grep -v "backup-content.sh" > "$tmp" || true
 printf "%s\n%s\n" "$CRON_MARK" "$CRON_LINE" >> "$tmp"
 crontab "$tmp"
 rm -f "$tmp"
