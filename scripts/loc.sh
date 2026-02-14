@@ -39,26 +39,23 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON_SCRIPT="${SCRIPT_DIR}/analyze_git_stats.py"
 
 if [[ ! -f "$PYTHON_SCRIPT" ]]; then
-    echo "⚠️  Warning: analyze_git_stats.py not found at: $PYTHON_SCRIPT"
+    echo "⚠️  Warning: analyze_git_stats.py not found, skipping comprehensive Git statistics"
+    echo "📊 Showing Lines of Code breakdown only"
     echo ""
-    echo "This script requires a Python analyzer that is not included in the scaffolded scripts."
-    echo "For a simpler LOC count, use: ./scripts/loc_simple.sh"
-    echo ""
-    exit 1
-fi
-
-echo "🚀 Generating Complete GitHub Statistics..."
-echo "========================================================================"
-echo
-
-# Run the comprehensive Python analyzer
-if [[ -n "$SINCE_DATE" ]]; then
-    python3 "$PYTHON_SCRIPT" "$SINCE_DATE"
 else
-    python3 "$PYTHON_SCRIPT"
-fi
+    echo "🚀 Generating Complete GitHub Statistics..."
+    echo "========================================================================"
+    echo
 
-echo
+    # Run the comprehensive Python analyzer
+    if [[ -n "$SINCE_DATE" ]]; then
+        python3 "$PYTHON_SCRIPT" "$SINCE_DATE"
+    else
+        python3 "$PYTHON_SCRIPT"
+    fi
+
+    echo
+fi
 echo "========================================================================"
 echo "📊 Lines of Code Breakdown (mvp_site directory)"
 echo "========================================================================"
@@ -66,7 +63,7 @@ echo "========================================================================"
 # Function to count lines in files
 count_lines() {
     local pattern="$1"
-    local files=$(find mvp_site -type f -name "$pattern" ! -path "*/__pycache__/*" ! -path "*/.pytest_cache/*" ! -path "*/node_modules/*" 2>/dev/null)
+    local files=$(find . -type f -name "$pattern" ! -path "*/__pycache__/*" ! -path "*/.pytest_cache/*" ! -path "*/node_modules/*" ! -path "*/.git/*" ! -path "*/dist/*" ! -path "*/build/*" 2>/dev/null)
     if [ -z "$files" ]; then
         echo "0"
     else
@@ -77,8 +74,8 @@ count_lines() {
 # Function to count test vs non-test lines
 count_test_vs_nontest() {
     local ext="$1"
-    local test_lines=$(find mvp_site -type f -name "*.$ext" ! -path "*/__pycache__/*" ! -path "*/.pytest_cache/*" ! -path "*/node_modules/*" 2>/dev/null | grep -i test | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}')
-    local nontest_lines=$(find mvp_site -type f -name "*.$ext" ! -path "*/__pycache__/*" ! -path "*/.pytest_cache/*" ! -path "*/node_modules/*" 2>/dev/null | grep -v -i test | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}')
+    local test_lines=$(find . -type f -name "*.$ext" ! -path "*/__pycache__/*" ! -path "*/.pytest_cache/*" ! -path "*/node_modules/*" ! -path "*/.git/*" ! -path "*/dist/*" ! -path "*/build/*" 2>/dev/null | grep -i test | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}')
+    local nontest_lines=$(find . -type f -name "*.$ext" ! -path "*/__pycache__/*" ! -path "*/.pytest_cache/*" ! -path "*/node_modules/*" ! -path "*/.git/*" ! -path "*/dist/*" ! -path "*/build/*" 2>/dev/null | grep -v -i test | xargs wc -l 2>/dev/null | tail -1 | awk '{print $1}')
 
     # Handle empty results
     test_lines=${test_lines:-0}
@@ -140,5 +137,9 @@ for ext in "${FILE_TYPES[@]}"; do
 done
 
 echo "-----------------------------------"
-printf "%-12s %10d %10d %10d %7d%%\n" "TOTAL" "$total_test_lines" "$total_nontest_lines" "$total_all_lines" "$(( (total_test_lines * 100) / total_all_lines ))"
+if [ $total_all_lines -gt 0 ]; then
+    printf "%-12s %10d %10d %10d %7d%%\n" "TOTAL" "$total_test_lines" "$total_nontest_lines" "$total_all_lines" "$(( (total_test_lines * 100) / total_all_lines ))"
+else
+    printf "%-12s %10d %10d %10d %7s\n" "TOTAL" "$total_test_lines" "$total_nontest_lines" "$total_all_lines" "N/A"
+fi
 echo "========================================================================"

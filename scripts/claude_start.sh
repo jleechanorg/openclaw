@@ -576,12 +576,12 @@ EOF
         chmod +x "$CRON_WRAPPER"
 
         # Add to cron (daily at 2 AM) with proper variable handling
-        local current_crontab_mem=$(crontab -l 2>/dev/null || echo "")
+        current_crontab_mem=$(crontab -l 2>/dev/null || echo "")
         (echo "$current_crontab_mem"; echo '0 2 * * * $HOME/.local/bin/unified_memory_backup_wrapper.sh >> /tmp/memory_backup.log 2>&1') | crontab -
 
         echo -e "${GREEN}✅ Installed unified memory backup cron job (daily at 2 AM)${NC}"
         # Remove cron job error from backup issues array safely
-        local temp_array=()
+        temp_array=()
         for issue in "${BACKUP_ISSUES[@]}"; do
             if [[ "$issue" != *"Cron job not configured"* ]]; then
                 temp_array+=("$issue")
@@ -883,7 +883,7 @@ if [ -n "$MODE" ]; then
                 MODEL=""
                 FLAGS="--dangerously-skip-permissions"
                 claude $FLAGS "$@"
-                return
+                exit 0
             fi
 
             # Check for Redis environment variables
@@ -923,7 +923,7 @@ if [ -n "$MODE" ]; then
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 # Check API key
@@ -936,7 +936,7 @@ if [ -n "$MODE" ]; then
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 echo -e "${GREEN}✅ Vast.ai CLI configured${NC}"
@@ -1207,7 +1207,7 @@ if [ -n "$MODE" ]; then
                 MODEL=""
                 FLAGS="--dangerously-skip-permissions"
                 claude $FLAGS "$@"
-                return
+                exit 0
             fi
 
             # Check for existing local proxy first
@@ -1255,7 +1255,7 @@ if [ -n "$MODE" ]; then
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
             fi
 
@@ -1296,7 +1296,7 @@ if [ -n "$MODE" ]; then
                 MODEL=""
                 FLAGS="--dangerously-skip-permissions"
                 claude $FLAGS "$@"
-                return
+                exit 0
             fi
 
             # Test API key validity
@@ -1313,7 +1313,7 @@ if [ -n "$MODE" ]; then
                 MODEL=""
                 FLAGS="--dangerously-skip-permissions"
                 claude $FLAGS "$@"
-                return
+                exit 0
             else
                 echo -e "${GREEN}✅ Cerebras API key validated${NC}"
                 echo -e "${BLUE}💡 Available models: $(echo "$RESPONSE" | jq -r '.data[]?.id // "qwen-3-coder-480b"' | head -3 | tr '\n' ' ')${NC}"
@@ -1332,7 +1332,7 @@ if [ -n "$MODE" ]; then
                 MODEL=""
                 FLAGS="--dangerously-skip-permissions"
                 claude $FLAGS "$@"
-                return
+                exit 0
             fi
 
             # Start Cerebras API proxy in background
@@ -1367,7 +1367,7 @@ if [ -n "$MODE" ]; then
                 MODEL=""
                 FLAGS="--dangerously-skip-permissions"
                 claude $FLAGS "$@"
-                return
+                exit 0
             fi
 
             # Store proxy PID for cleanup
@@ -1529,7 +1529,7 @@ else
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
                 ;;
             2)
@@ -1546,7 +1546,7 @@ else
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 # Check API key
@@ -1559,7 +1559,7 @@ else
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 echo -e "${GREEN}✅ Vast.ai CLI configured${NC}"
@@ -1576,7 +1576,7 @@ else
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 echo -e "${GREEN}✅ Found available instances:${NC}"
@@ -1635,7 +1635,7 @@ else
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 echo -e "${GREEN}✅ Instance created: $INSTANCE_ID${NC}"
@@ -1661,7 +1661,7 @@ else
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 # Get SSH connection details
@@ -1737,7 +1737,7 @@ EOF
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
                 ;;
             3)
@@ -1753,7 +1753,7 @@ EOF
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 echo -e "${BLUE}🔍 Listing your running instances...${NC}"
@@ -1770,7 +1770,7 @@ EOF
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 # Get connection details
@@ -1786,7 +1786,7 @@ EOF
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
 
                 echo -e "${BLUE}🔗 Connecting to instance $INSTANCE_ID at $SSH_HOST:$SSH_PORT${NC}"
@@ -1808,7 +1808,7 @@ EOF
                     MODEL=""
                     FLAGS="--dangerously-skip-permissions"
                     claude $FLAGS "$@"
-                    return
+                    exit 0
                 fi
                 ;;
             4)
@@ -1823,7 +1823,7 @@ EOF
                 MODEL=""
                 FLAGS="--dangerously-skip-permissions"
                 claude $FLAGS "$@"
-                return
+                exit 0
                 ;;
             esac
         fi

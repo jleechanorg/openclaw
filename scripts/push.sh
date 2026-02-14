@@ -26,7 +26,10 @@ git add .
 
 # Use the dynamically created commit message
 echo "Committing with message: '${COMMIT_MSG}'..."
-git commit -m "${COMMIT_MSG}"
+if ! git commit -m "${COMMIT_MSG}"; then
+    echo "Commit failed. Aborting push."
+    exit 1
+fi
 
 echo "Pushing changes to GitHub..."
 git push
