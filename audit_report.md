@@ -11,6 +11,7 @@
 - This pass used a constrained execution mode; bootstrap/export was prepared via the `openclaw-rehome` scaffolding and confirmed as available.
 - This audit reflects files explicitly readable in this environment.
 - `AGENTS.md` was not found at `~/.openclaw/AGENTS.md`. (Workspace version is read and used instead.)
+- Token scrub policy now enforced in `bootstrap-openclaw-config.sh` for common credential patterns (including Slack token formats).
 
 ## What to include in migration bundle
 - `~/.openclaw` root files (especially the four above, plus any hidden JSON/YAML, TOML, and shell rc files if present).
