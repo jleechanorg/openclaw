@@ -54,12 +54,15 @@ if [ -n "$APP_TOKEN" ]; then
     # With Socket Mode (recommended)
     openclaw channels add \
         --channel slack \
-        --account default
+        --account default \
+        --bot-token "$BOT_TOKEN" \
+        --app-token "$APP_TOKEN"
 else
     # Without Socket Mode
     openclaw channels add \
         --channel slack \
-        --account default
+        --account default \
+        --bot-token "$BOT_TOKEN"
 fi
 
 OPENCLAW_EXIT=$?
