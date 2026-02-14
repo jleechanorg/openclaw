@@ -94,8 +94,6 @@
         "basename",
         "playwright",
         "which",
-        "curl",
-        "wget",
         "jq",
         "rg",
         "xargs",
@@ -104,8 +102,7 @@
         "mv",
         "chmod",
         "chown",
-        "printf",
-        "ssh"
+        "printf"
       ]
     }
   },
@@ -137,9 +134,7 @@
     "whatsapp": {
       "dmPolicy": "allowlist",
       "selfChatMode": true,
-      "allowFrom": [
-        "+<YOUR_WHATSAPP_NUMBER>"
-      ],
+      "allowFrom": [],
       "groupPolicy": "allowlist",
       "mediaMaxMb": 50,
       "debounceMs": 0
