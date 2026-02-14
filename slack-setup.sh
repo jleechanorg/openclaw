@@ -9,9 +9,16 @@ echo "🦞 OpenClaw Slack Integration Setup"
 echo "===================================="
 echo ""
 
-# Check if tokens are provided
-if [ -z "$1" ]; then
+# Resolve tokens from env or args
+BOT_TOKEN="${SLACK_BOT_TOKEN:-$1}"
+APP_TOKEN="${SLACK_APP_TOKEN:-$2}"
+
+# Prompt for missing tokens
+if [ -z "$BOT_TOKEN" ]; then
     echo "❌ Error: Bot token required"
+    echo "You can provide it as:"
+    echo "  - Environment variable: SLACK_BOT_TOKEN"
+    echo "  - First positional argument"
     echo ""
     echo "Usage: $0 <bot-token> [app-token]"
     echo ""
@@ -27,8 +34,10 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-BOT_TOKEN="$1"
-APP_TOKEN="$2"
+export SLACK_BOT_TOKEN="$BOT_TOKEN"
+if [ -n "$APP_TOKEN" ]; then
+    export SLACK_APP_TOKEN="$APP_TOKEN"
+fi
 
 echo "📝 Configuration:"
 echo "  App ID: $SLACK_APP_ID"
@@ -45,15 +54,12 @@ if [ -n "$APP_TOKEN" ]; then
     # With Socket Mode (recommended)
     openclaw channels add \
         --channel slack \
-        --account default \
-        --bot-token "$BOT_TOKEN" \
-        --app-token "$APP_TOKEN"
+        --account default
 else
     # Without Socket Mode
     openclaw channels add \
         --channel slack \
-        --account default \
-        --bot-token "$BOT_TOKEN"
+        --account default
 fi
 
 OPENCLAW_EXIT=$?

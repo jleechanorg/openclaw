@@ -12,7 +12,7 @@
 - **File:** `~/Library/LaunchAgents/ai.openclaw.gateway.plist`
 - **RunAtLoad:** `true` ← Starts automatically on macOS boot
 - **KeepAlive:** `true` ← Automatically restarts if crashes
-- **Current Status:** Loaded and running (PID: 35166)
+- **Current Status:** Loaded and running (PID: XXXXX)
 
 ### 2. **Startup Verification: LaunchAgent**
 - **File:** `~/Library/LaunchAgents/ai.openclaw.startup-check.plist`
@@ -35,7 +35,7 @@
 launchctl list | grep openclaw
 ```
 **Expected Output:**
-```
+```text
 [PID]  0  ai.openclaw.gateway
 [PID]  0  ai.openclaw.startup-check
 ```
@@ -45,7 +45,7 @@ launchctl list | grep openclaw
 openclaw gateway status
 ```
 **Expected Output:**
-```
+```text
 Runtime: running (pid XXXXX)
 RPC probe: ok
 ```
@@ -55,7 +55,7 @@ RPC probe: ok
 openclaw channels list
 ```
 **Expected Output:**
-```
+```text
 WhatsApp default: linked, enabled
 ```
 
