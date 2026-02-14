@@ -35,7 +35,7 @@ if [ -f "$LAUNCHAGENT" ]; then
   TAR_SOURCES+=("$LAUNCHAGENT")
 fi
 
-tar --exclude "$BACKUP_DIR" \
+tar --exclude "${BACKUP_DIR#/}" \
   --exclude '*.bak' \
   -czf "$BACKUP_DIR/backup-${BACKUP_DATE}.tar.gz" \
   "${TAR_SOURCES[@]}"
