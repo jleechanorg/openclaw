@@ -31,11 +31,11 @@ if ! launchctl bootstrap gui/$(id -u) "$PLIST_DST" 2>"$BOOTSTRAP_ERR_FILE"; then
     cat "$BOOTSTRAP_ERR_FILE" >&2
   fi
   launchctl bootout gui/$(id -u) "$PLIST_DST" 2>/dev/null || true
-  launchctl bootstrap gui/$(id -u) "$PLIST_DST"
+  launchctl bootstrap gui/$(id -u) "$PLIST_DST" || true
 fi
 rm -f "$BOOTSTRAP_ERR_FILE"
-launchctl enable gui/$(id -u)/com.openclaw.backup
-launchctl kickstart -k gui/$(id -u)/com.openclaw.backup
+launchctl enable gui/$(id -u)/com.openclaw.backup || true
+launchctl kickstart -k gui/$(id -u)/com.openclaw.backup || true
 
 echo "Installed launchd job at $PLIST_DST"
 
@@ -51,8 +51,8 @@ if ! grep -Fq "$CRON_MARKER" "$CRON_TMP"; then
   crontab "$CRON_TMP"
   echo "Installed cron job: every 4 hours"
 elif ! grep -Fq "$CRON_CMD" "$CRON_TMP"; then
-  # Marker exists but path is stale; replace the cron line
-  sed -i.bak "/^0 \*\/4 \* \* \*/s|.*|0 */4 * * * $CRON_CMD|" "$CRON_TMP"
+  # Marker exists but path is stale; replace the cron line immediately following the marker
+  sed -i.bak "/$CRON_MARKER/{n;s|.*|0 */4 * * * $CRON_CMD|;}" "$CRON_TMP"
   crontab "$CRON_TMP"
   echo "Updated cron job path to $CRON_CMD"
 else

@@ -58,6 +58,7 @@ else
             echo "  → Moving repository..."
             mv "$REPO_ROOT" "$HOME/.openclaw/workspace/openclaw"
             OPENCLAW_REPO="$HOME/.openclaw/workspace/openclaw"
+            REPO_ROOT="$OPENCLAW_REPO"
             cd "$OPENCLAW_REPO"
             ;;
         c|C|*)
